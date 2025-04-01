@@ -1,7 +1,13 @@
 #!/bin/bash
 
+if (( $# < 2 )); then
+  echo "$0: usage: $0 <clustername> <basedomain> [hcp args]" >&2
+  exit 2
+fi
+
 clustername=$1
-shift
+basedomain=$2
+shift 2
 
 [[ -z "$clustername" ]] && exit 1
 
@@ -16,10 +22,10 @@ hcp create cluster agent \
   --name="$clustername" \
   --pull-secret=pull-secret.txt \
   --agent-namespace=hardware-inventory \
-  --base-domain=int.massopen.cloud \
-  --api-server-address=api."$clustername".int.massopen.cloud \
+  --base-domain="$basedomain" \
+  --api-server-address=api."$clustername"."$basedomain" \
   --etcd-storage-class=lvms-vg1 \
-  --ssh-key larsks.pub \
+  --ssh-key sshkey.pub \
   --namespace clusters \
   --control-plane-availability-policy HighlyAvailable \
   --release-image=quay.io/openshift-release-dev/ocp-release:4.17.9-multi \
