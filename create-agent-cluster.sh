@@ -22,6 +22,7 @@ hcp create cluster agent \
   --name="$clustername" \
   --pull-secret=pull-secret.txt \
   --agent-namespace=hardware-inventory \
+  --agentLabelSelector "cluster=$clustername" \
   --base-domain="$basedomain" \
   --api-server-address=api."$clustername"."$basedomain" \
   --etcd-storage-class=lvms-vg1 \
