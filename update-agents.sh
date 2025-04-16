@@ -1,8 +1,9 @@
 #!/bin/bash
 
-while getopts n: ch; do
+while getopts n:l: ch; do
   case $ch in
   n) namespace=$OPTARG ;;
+  l) labelselector=$OPTARG ;;
   *) exit 2 ;;
   esac
 done
@@ -14,7 +15,7 @@ workdir=$(mktemp -d workXXXXXX)
 trap 'rm -rf "$workdir"' EXIT
 
 echo "get list of agents"
-kubectl ${namespace:+-n "$namespace"} get agents -o json |
+kubectl ${namespace:+-n "$namespace"} get agents -o json ${labelselector:+-l ${labelselector}} |
   jq -r '.items[]|[.metadata.name, (.status.inventory.interfaces[]|select(.flags|index("running")).macAddress)]|@tsv' >"$workdir/agents.tab"
 
 while read -r agent macaddr; do
