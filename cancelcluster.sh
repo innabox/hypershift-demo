@@ -47,6 +47,8 @@ remove_finalizers -n "$hc_namespace" NodePool "$nodepool_name"
 remove_finalizers -n "$cluster_namespace" AgentClusterInstall "$hc_name"
 remove_finalizers -n "$cluster_namespace" ClusterDeployment "$hc_name"
 remove_finalizers -n "$cluster_namespace" AgentCluster "$hc_name"
+remove_finalizers -n "$cluster_namespace" clusters.cluster.x-k8s.io "$hc_name"
+remove_finalizers -n "$cluster_namespace" hostedcontrolplanes "$hc_name"
 
 kubectl -n "$cluster_namespace" get Machine -o name | cut -f2 -d/ | while read -r machine; do
   remove_finalizers -n "$cluster_namespace" Machine "$machine"
