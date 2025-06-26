@@ -37,7 +37,8 @@ kubectl -n "$cluster_namespace" get AgentMachine -o name | cut -f2 -d/ | while r
   remove_finalizers -n "$cluster_namespace" AgentMachine "$agentmachine"
   kubectl -n "$agent_namespace" get Agent -l agentMachineRef="$agentmachine" -o name | cut -f2 -d/ | while read -r agent; do
     remove_finalizers -n "$agent_namespace" Agent "$agent"
-    kubectl -n "$agent_namespace" delete Agent "$agent" --wait=false
+    # We probably don't want to delete the agents.
+    #kubectl -n "$agent_namespace" delete Agent "$agent" --wait=false
   done
 done
 
