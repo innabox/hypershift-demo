@@ -37,7 +37,7 @@ while read -r agent macaddrs; do
   fi
   echo "found node $node for agent $agent"
 
-  openstack baremetal node show "$node" -f json > "$workdir/$node.json"
+  openstack baremetal node show "$node" -f json >"$workdir/$node.json"
 
   resource_class=$(jq -r .resource_class "$workdir/$node.json")
   uuid=$(jq -r .uuid "$workdir/$node.json")
@@ -47,7 +47,7 @@ while read -r agent macaddrs; do
   # MOC-R8PAC23U26
   if [[ $node =~ MOC-R([0-9]+)P([A-Z])C([0-9]+)U([0-9]+)(-S(.*))? ]]; then
     echo "labelling node $node with: ${BASH_REMATCH[*]}"
-    kubectl ${namespace:+-n "$namespace"} label agent "$agent" \
+    kubectl ${namespace:+-n "$namespace"} label --overwrite agent "$agent" \
       topology.nerc.mghpcc.org/row="${BASH_REMATCH[1]}" \
       topology.nerc.mghpcc.org/pod="${BASH_REMATCH[2]}" \
       topology.nerc.mghpcc.org/cabinet="${BASH_REMATCH[3]}" \
